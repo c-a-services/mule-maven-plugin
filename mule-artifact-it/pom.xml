@@ -26,6 +26,7 @@
             </activation>
             <modules>
                 <module>mule-packager-it</module>
+                <module>mule-deployer-it</module>
             </modules>
         </profile>
         <profile>
