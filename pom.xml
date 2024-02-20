@@ -45,6 +45,7 @@
 		
 		<!-- pipe (|) seperated list of properties to be passed to the mvn build via -D -->
 		<additionalMavenProperty>skipVerifications=true|maven.test.skip=true</additionalMavenProperty>
+		<nexus.snapshots.url>https://nexus.canda.com/repository/Snapshots</nexus.snapshots.url>
 
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
@@ -638,6 +639,16 @@
                 </repository>
             </distributionManagement>
         </profile>
+		<profile>
+			<id>ci-snapshot</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>nexus-site</id>
+					<url>${nexus.snapshots.url}</url>
+					<uniqueVersion>true</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
     </profiles>
 
     <scm>
