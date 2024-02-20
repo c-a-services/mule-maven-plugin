@@ -138,7 +138,7 @@ public abstract class AbstractClient {
 
   protected WebTarget getTarget(String uri, String path) {
     ClientConfig configuration = new ClientConfig();
-    configuration.connectorProvider(new JdkConnectorProvider());
+   // configuration.connectorProvider(new JdkConnectorProvider());
     ClientBuilder builder = ClientBuilder.newBuilder().withConfig(configuration);
 
 
