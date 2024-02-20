@@ -42,6 +42,10 @@
     </modules>
 
     <properties>
+		
+		<!-- pipe (|) seperated list of properties to be passed to the mvn build via -D -->
+		<additionalMavenProperty>formatter.skip=false|maven.test.skip=true</additionalMavenProperty>
+
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
