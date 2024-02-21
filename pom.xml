@@ -4,7 +4,7 @@
 
     <groupId>org.mule.tools.maven</groupId>
     <artifactId>mule-artifact-tools</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>Mule Artifact Tools</name>
@@ -46,6 +46,9 @@
 		<!-- pipe (|) seperated list of properties to be passed to the mvn build via -D -->
 		<additionalMavenProperty>skipVerifications=true|maven.test.skip=true|skipTests=true|formatterGoal=help</additionalMavenProperty>
 		<nexus.snapshots.url>https://nexus.canda.com/repository/Snapshots</nexus.snapshots.url>
+		<sbmReleasePackage>4.1.1</sbmReleasePackage>
+		<notifyrelease.email.addresses>stefan.cordes@canda.com,oms-deploymentmanager@canda.com</notifyrelease.email.addresses>
+		<revision>1.0.0-local-SNAPSHOT</revision>
 
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
