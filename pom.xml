@@ -50,6 +50,9 @@
 		<sbmReleasePackage>4.2.0</sbmReleasePackage>
 		<notifyrelease.email.addresses>stefan.cordes@canda.com,oms-deploymentmanager@canda.com</notifyrelease.email.addresses>
 		<revision>1.0.0-local-SNAPSHOT</revision>
+		<!-- https://www.mojohaus.org/flatten-maven-plugin/ -->
+		<!-- https://github.com/mojohaus/flatten-maven-plugin/releases -->
+		<version.flatten-maven-plugin>1.6.0</version.flatten-maven-plugin>
 
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
@@ -662,6 +665,46 @@
 					<uniqueVersion>true</uniqueVersion>
 				</snapshotRepository>
 			</distributionManagement>
+		</profile>
+		<profile>
+			<id>project-version-is-revision</id>
+			<activation>
+				<property>
+					<name>revision</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- for https://maven.apache.org/maven-ci-friendly.html -->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>flatten-maven-plugin</artifactId>
+						<version>${version.flatten-maven-plugin}</version>
+						<configuration>
+							<!-- The flag to indicate if the generated flattened POM shall be set as POM file  -->
+							<updatePomFile>true</updatePomFile>
+							<flattenMode>resolveCiFriendliesOnly</flattenMode>
+							<keepCommentsInPom>true</keepCommentsInPom>
+						</configuration>
+						<executions>
+							<execution>
+								<id>flatten-resolveCiFriendliesOnly</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>flatten</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>flatten-clean</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
     </profiles>
 
