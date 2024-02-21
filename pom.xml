@@ -47,7 +47,7 @@
 		<additionalMavenProperty>skipVerifications=true|maven.test.skip=true|skipTests=true|formatterGoal=help</additionalMavenProperty>
 		<nexus.snapshots.url>https://nexus.canda.com/repository/Snapshots</nexus.snapshots.url>
 		<nexus.releases.url>https://nexus.canda.com/repository/Releases</nexus.releases.url>
-		<sbmReleasePackage>4.1.1</sbmReleasePackage>
+		<sbmReleasePackage>4.2.0</sbmReleasePackage>
 		<notifyrelease.email.addresses>stefan.cordes@canda.com,oms-deploymentmanager@canda.com</notifyrelease.email.addresses>
 		<revision>1.0.0-local-SNAPSHOT</revision>
 
