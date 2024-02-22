@@ -662,11 +662,11 @@
 		<profile>
 			<id>ci-release</id>
 			<distributionManagement>
-				<snapshotRepository>
+                <repository>
 					<id>nexus-site</id>
 					<url>${nexus.releases.url}</url>
 					<uniqueVersion>true</uniqueVersion>
-				</snapshotRepository>
+                </repository>
 			</distributionManagement>
 			<build>
 				<plugins>
