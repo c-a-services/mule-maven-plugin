@@ -53,6 +53,9 @@
 		<!-- https://www.mojohaus.org/flatten-maven-plugin/ -->
 		<!-- https://github.com/mojohaus/flatten-maven-plugin/releases -->
 		<version.flatten-maven-plugin>1.6.0</version.flatten-maven-plugin>
+		<!-- copy-from-mavenbase-parent-to-child-project-marker -->
+		<!-- https://github.com/apache/maven-enforcer/releases -->
+		<version.maven-enforcer-plugin>3.4.1</version.maven-enforcer-plugin>
 
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
@@ -665,6 +668,42 @@
 					<uniqueVersion>true</uniqueVersion>
 				</snapshotRepository>
 			</distributionManagement>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- for https://maven.apache.org/maven-ci-friendly.html -->
+						<!-- see /common-jenkinsfiles/mulestac/Jenkinsfile -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>${version.maven-enforcer-plugin}</version>
+						<configuration>
+							<rules>
+								<requireReleaseDeps>
+									<searchTransitive>false</searchTransitive>
+									<message>No Snapshots Allowed!</message>
+								</requireReleaseDeps>
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<!-- just manage the plugin as it cannot be limited
+								to run on parent pom only.
+								inherited=false
+								would limit the plugin to this pom (=maven-base) and so on a
+								commonstac-project it will not run at all.
+								See /common-jenkinsfiles/include.Jenkinsfile for execution
+							 -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-scm-plugin</artifactId>
+							<version>1.11.2</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
 		</profile>
 		<profile>
 			<id>project-version-is-revision</id>
