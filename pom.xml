@@ -4,7 +4,7 @@
 
     <groupId>org.mule.tools.maven</groupId>
     <artifactId>mule-artifact-tools</artifactId>
-    <version>4.1.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>Mule Artifact Tools</name>
@@ -42,6 +42,21 @@
     </modules>
 
     <properties>
+		
+		<!-- pipe (|) seperated list of properties to be passed to the mvn build via -D -->
+		<additionalMavenProperty>skipVerifications=true|maven.test.skip=true|skipTests=true|formatterGoal=help</additionalMavenProperty>
+		<nexus.snapshots.url>https://nexus.canda.com/repository/Snapshots</nexus.snapshots.url>
+		<nexus.releases.url>https://nexus.canda.com/repository/Releases</nexus.releases.url>
+		<sbmReleasePackage>4.1.1-canda</sbmReleasePackage>
+		<notifyrelease.email.addresses>stefan.cordes@canda.com,oms-deploymentmanager@canda.com</notifyrelease.email.addresses>
+		<revision>1.0.0-local-SNAPSHOT</revision>
+		<!-- https://www.mojohaus.org/flatten-maven-plugin/ -->
+		<!-- https://github.com/mojohaus/flatten-maven-plugin/releases -->
+		<version.flatten-maven-plugin>1.6.0</version.flatten-maven-plugin>
+		<!-- copy-from-mavenbase-parent-to-child-project-marker -->
+		<!-- https://github.com/apache/maven-enforcer/releases -->
+		<version.maven-enforcer-plugin>3.4.1</version.maven-enforcer-plugin>
+
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -77,8 +92,8 @@
         <plexus.component.annotations.version>2.1.0</plexus.component.annotations.version>
         <jsonassert.version>1.5.0</jsonassert.version>
 
-        <jersey.version>2.35</jersey.version>
-        <jersey.media.moxy>2.31</jersey.media.moxy>
+        <jersey.version>3.1.5</jersey.version>
+        <jersey.media.moxy>3.1.5</jersey.media.moxy>
 
         <junit.version>4.13.2</junit.version>
         <hamcrest.version>2.2</hamcrest.version>
@@ -634,11 +649,107 @@
                 </repository>
             </distributionManagement>
         </profile>
+		<profile>
+			<id>ci-snapshot</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>nexus-site</id>
+					<url>${nexus.snapshots.url}</url>
+					<uniqueVersion>true</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>ci-release</id>
+			<distributionManagement>
+                <repository>
+					<id>nexus-site</id>
+					<url>${nexus.releases.url}</url>
+					<uniqueVersion>true</uniqueVersion>
+                </repository>
+			</distributionManagement>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- for https://maven.apache.org/maven-ci-friendly.html -->
+						<!-- see /common-jenkinsfiles/mulestac/Jenkinsfile -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>${version.maven-enforcer-plugin}</version>
+						<configuration>
+							<rules>
+								<requireReleaseDeps>
+									<searchTransitive>false</searchTransitive>
+									<message>No Snapshots Allowed!</message>
+								</requireReleaseDeps>
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<!-- just manage the plugin as it cannot be limited
+								to run on parent pom only.
+								inherited=false
+								would limit the plugin to this pom (=maven-base) and so on a
+								commonstac-project it will not run at all.
+								See /common-jenkinsfiles/include.Jenkinsfile for execution
+							 -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-scm-plugin</artifactId>
+							<version>1.11.2</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+		<profile>
+			<id>project-version-is-revision</id>
+			<activation>
+				<property>
+					<name>revision</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- for https://maven.apache.org/maven-ci-friendly.html -->
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>flatten-maven-plugin</artifactId>
+						<version>${version.flatten-maven-plugin}</version>
+						<configuration>
+							<!-- The flag to indicate if the generated flattened POM shall be set as POM file  -->
+							<updatePomFile>true</updatePomFile>
+							<flattenMode>resolveCiFriendliesOnly</flattenMode>
+							<keepCommentsInPom>true</keepCommentsInPom>
+						</configuration>
+						<executions>
+							<execution>
+								<id>flatten-resolveCiFriendliesOnly</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>flatten</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>flatten-clean</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
     </profiles>
 
     <scm>
-        <connection>scm:git:git://github.com/mulesoft/mule-maven-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:mulesoft/mule-maven-plugin.git</developerConnection>
+        <connection>scm:git:git@github.com:c-a-services/mule-maven-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:c-a-services/mule-maven-plugin.git</developerConnection>
         <url>https://github.com/mulesoft/mule-maven-plugin</url>
         <tag>HEAD</tag>
     </scm>
