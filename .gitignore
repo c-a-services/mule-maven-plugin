@@ -17,3 +17,5 @@ mule-artifact-it/wrapper.log
 
 #ignoring generated folder while running the integration tests (place where it clones the maven repository)
 ${user.home}/
+.flattened-pom.xml
+.factorypath
