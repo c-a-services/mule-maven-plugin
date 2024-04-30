@@ -146,23 +146,20 @@ public abstract class AbstractClient {
   protected WebTarget getTarget(String uri, String path) {
     ClientConfig configuration = new ClientConfig();
     String connector = System.getProperty(CONNECTOR_PROVIDER_PROPERTY, JDK);
-    log.info("connector="+connector);
+    System.out.println("connector="+connector);
     switch (connector) {
       case JDK:
         configuration.connectorProvider(new JdkConnectorProvider());
-        log.info("use JdkConnectorProvider");
+        System.out.println("use JdkConnectorProvider");
         break;
       case APACHE_5:
         configuration.connectorProvider(new Apache5ConnectorProvider());
-        log.info("use Apache5ConnectorProvider");
+        System.out.println("use Apache5ConnectorProvider");
         break;
       case HTTP_URL:
         configuration.connectorProvider(new HttpUrlConnectorProvider());
-        log.info("use HttpUrlConnectorProvider");
+        System.out.println("use HttpUrlConnectorProvider");
         break;
-      default:
-          log.info("use none");
-          break;
     }
     ClientBuilder builder = ClientBuilder.newBuilder().withConfig(configuration);
 
